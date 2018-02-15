@@ -1,5 +1,6 @@
 const passport = require('passport');
 const request = require('request');
+const LocalStrategy = require('passport-local').Strategy;
 const TwitterStrategy = require('passport-twitter').Strategy;
 const OAuthStrategy = require('passport-oauth').OAuthStrategy;
 const OAuth2Strategy = require('passport-oauth').OAuth2Strategy;
@@ -15,8 +16,6 @@ passport.deserializeUser((id, done) => {
     done(err, user);
   });
 });
-
-const User = require('../models/User');
 
 passport.serializeUser((user, done) => {
   done(null, user.id);
