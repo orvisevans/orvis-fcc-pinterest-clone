@@ -1,6 +1,5 @@
 const passport = require('passport');
 const request = require('request');
-const LocalStrategy = require('passport-local').Strategy;
 const TwitterStrategy = require('passport-twitter').Strategy;
 const OAuthStrategy = require('passport-oauth').OAuthStrategy;
 const OAuth2Strategy = require('passport-oauth').OAuth2Strategy;
@@ -17,35 +16,6 @@ passport.deserializeUser((id, done) => {
   });
 });
 
-passport.serializeUser((user, done) => {
-  done(null, user.id);
-});
-
-passport.deserializeUser((id, done) => {
-  User.findById(id, (err, user) => {
-    done(err, user);
-  });
-});
-
-/**
- * Sign in using Email and Password.
- */
-passport.use(new LocalStrategy({ usernameField: 'email' }, (email, password, done) => {
-  User.findOne({ email: email.toLowerCase() }, (err, user) => {
-    if (err) { return done(err); }
-    if (!user) {
-      return done(null, false, { msg: `Email ${email} not found.` });
-    }
-    user.comparePassword(password, (err, isMatch) => {
-      if (err) { return done(err); }
-      if (isMatch) {
-        return done(null, user);
-      }
-      return done(null, false, { msg: 'Invalid email or password.' });
-    });
-  });
-}));
-
 /**
  * OAuth Strategy Overview
  *
@@ -56,8 +26,6 @@ passport.use(new LocalStrategy({ usernameField: 'email' }, (email, password, don
  * - User is not logged in.
  *   - Check if it's a returning user.
  *     - If returning user, sign in and we are done.
- *     - Else check if there is an existing account with user's email.
- *       - If there is, return an error message.
  *       - Else create a new account.
  */
 
@@ -98,10 +66,6 @@ passport.use(new TwitterStrategy({
           return done(null, existingUser);
         }
         const user = new User();
-        // Twitter will not provide an email address.  Period.
-        // But a person’s twitter username is guaranteed to be unique
-        // so we can "fake" a twitter email address as follows:
-        user.email = `${profile.username}@twitter.com`;
         user.twitter = profile.id;
         user.tokens.push({ kind: 'twitter', accessToken, tokenSecret });
         user.profile.name = profile.displayName;

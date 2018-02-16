@@ -5,7 +5,6 @@ const errorHandler = require('errorhandler');
 const bodyParser = require('body-parser')
 const logger = require('morgan');
 const chalk = require('chalk');
-const lusca = require('lusca');
 const path = require('path');
 const flash = require('express-flash');
 const mongoose = require('mongoose');
@@ -45,8 +44,6 @@ app.use(bodyParser.json());
 app.use(flash());
 app.use(passport.initialize());
 app.use(passport.session());
-app.use(lusca.xframe('SAMEORIGIN'));
-app.use(lusca.xssProtection(true));
 app.use((req, res, next) => {
   res.locals.user = req.user;
   next();
