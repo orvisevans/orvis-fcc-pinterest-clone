@@ -8,13 +8,14 @@ html
     meta(name='csrf-token', content=_csrf)
     title #{title} - Orvis - Free Code Camp - Pinterest Clone
     link(rel='shortcut icon', href='/favicon.png')
+    link(rel='stylesheet', href='/css/lib/bootstrap.min.css')
     link(rel='stylesheet', href='/css/main.css')
 
   body
     include partials/header
 
-    .container
-      include partials/flash
+    main.container.pinboard(role='main')
+      //- include partials/flash
       block content
 
     include partials/footer
