@@ -1,8 +1,8 @@
+const pinController = require('./pin');
+
 // Get /
 // Home Page
 
 exports.index = (req, res) => {
-    res.render('home', {
-        title: 'Home'
-    });
+    pinController.getFreshPins(req, res);
 }
