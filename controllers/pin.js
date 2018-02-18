@@ -64,6 +64,14 @@ exports.getNewPin = (req, res) => {
       })
   }
 
+  /**
+   * Get pins of logged in user
+   */
+
+   exports.getMyPins = (req, res) => {
+       res.redirect('/pinsBy/user/' + req.user.id);
+   }
+
  /**
   * Get fresh pins and render home view with them
   */

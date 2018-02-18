@@ -64,6 +64,7 @@ app.get('/', homeController.index);
 app.get('/new-pin', passportConfig.isAuthenticated, pinController.getNewPin);
 app.get('/pin/:id', pinController.getOnePin);
 app.get('/pinsBy/user/:id', pinController.getPinsBy);
+app.get('/my-pins', passportConfig.isAuthenticated, pinController.getMyPins);
 // app.get('/signup', userController.getSignup);
 // app.get('/account', userController.passportConfig.isAuthenticated, userController.getAccount);
 // app.get('/user/:user', userController.browseUser);
