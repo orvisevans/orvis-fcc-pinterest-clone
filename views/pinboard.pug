@@ -1,0 +1,10 @@
+extends layout
+
+block content
+  .card-columns
+    each pin in pins
+      .card.text-white.bg-secondary
+        a(href="/pin/"+pin.id)
+          image.card-img-top.img-fluid(src=pin.source, title=pin.title)
+        .card-body
+          h5.card-title= pin.title

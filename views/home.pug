@@ -1,7 +1,0 @@
-extends layout
-
-block content
-  .pinboard
-    each pin in pins
-        image.pin-image.img-fluid.img-thumbnail(src=pin.source)
-        span.pin-title= pin.title

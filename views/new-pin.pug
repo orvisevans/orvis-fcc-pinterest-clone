@@ -1,0 +1,11 @@
+extends layout
+
+block content
+    form.new-pin(action="/api/new-pin", method="post")
+        .form-group
+            label(for="new-pin-soure") Image URL
+            input#new-pin-source.form-control(name="source", type="url", placeholder="http://www.....")
+        .form-group
+            label(for="new-pin-title") Image Title
+            input#new-pin-title.form-control(name="title", type="text", placeholder="What would you call this?")
+        button.btn.btn-primary(type="submit") Submit

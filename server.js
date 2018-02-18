@@ -18,6 +18,7 @@ dotenv.load({path: '.env'});
 
 //Controllers (route handlers)
 const homeController = require('./controllers/home');
+const pinController = require('./controllers/pin');
 const userController = require('./controllers/user');
 const apiController = require('./controllers/api');
 
@@ -40,7 +41,7 @@ app.set('port', process.env.PORT || process.env.OPENSHIFT_NODEJS_PORT || 8080);
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
 app.use(logger('dev'));
-app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended: true}));
 // app.use(flash());
 app.use(passport.initialize());
 app.use(passport.session());
@@ -69,6 +70,8 @@ app.use(express.static(path.join(__dirname, 'public'), { maxAge: 31557600000 }))
 //Primary app routes
 app.get('/', homeController.index);
 app.get('/login', userController.getLogin);
+app.get('/new-pin', pinController.getNewPin);
+app.get('/pin/:id', pinController.getOnePin);
 // app.post('/login', userController.postLogin);
 // app.get('/signup', userController.getSignup);
 // app.get('/account', userController.passportConfig.isAuthenticated, userController.getAccount);
@@ -79,6 +82,7 @@ app.get('/login', userController.getLogin);
 
 //API routes
 app.get('/api', apiController.getApi);
+app.post('/api/new-pin', pinController.postNewPin);
 // app.post('/api/upload', passportConfig.isAuthenticated, passportConfig.isAuthorized, apiController.newPin);
 // app.delete('/api/delete-pin', passportConfig.isAuthenticated, passportConfig.isAuthorized, apiController.deletePin);
 
