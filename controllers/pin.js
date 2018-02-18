@@ -48,7 +48,7 @@ exports.getNewPin = (req, res) => {
   * Get fresh pins and render home view with them
   */
  exports.getFreshPins = (req, res) => {
-     Pin.find({}, 'source title', {limit: 20}, (err, pins) => {
+     Pin.find({}, {limit: 20}, (err, pins) => {
          if (err) { res.locals.pins=[]; return console.error(err); }
          res.locals.pins = pins
          res.render('pinboard', {
