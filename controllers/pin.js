@@ -29,6 +29,17 @@ exports.getNewPin = (req, res) => {
  }
 
  /**
+  * Delete /api/delete/pin/:id
+  * deletes an existing pin
+  */
+
+  exports.deletePin = (req, res) => {
+      Pin.findByIdAndRemove(req.params.id, (err, res) => {
+          if(err) { return console.error(err); }
+      });
+  }
+
+ /**
   * Get one pin with its id and render one onePin view
   */
  exports.getOnePin = (req, res) => {

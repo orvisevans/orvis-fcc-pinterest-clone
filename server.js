@@ -74,7 +74,7 @@ app.get('/pinsBy/user/:id', pinController.getPinsBy);
 //API routes
 app.get('/api', apiController.getApi);
 app.post('/api/new-pin', passportConfig.isAuthenticated, pinController.postNewPin);
-app.delete('/pin/:id', passportConfig.isAuthenticated, pinController.deletePin);
+app.delete('/api/delete/pin/:id', passportConfig.isAuthenticated, pinController.deletePin);
 // app.post('/api/upload', passportConfig.isAuthenticated, passportConfig.isAuthorized, apiController.newPin);
 // app.delete('/api/delete-pin', passportConfig.isAuthenticated, passportConfig.isAuthorized, apiController.deletePin);
 
