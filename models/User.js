@@ -6,6 +6,7 @@ const userSchema = new mongoose.Schema({
   
   profile: {
     name: String,
+    screenName: String,
     picture: String
   }
 }, { timestamps: true });

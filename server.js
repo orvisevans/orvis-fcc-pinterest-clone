@@ -2,7 +2,8 @@
 const express = require('express');
 const dotenv = require('dotenv');
 const errorHandler = require('errorhandler');
-const bodyParser = require('body-parser')
+const bodyParser = require('body-parser');
+const session = require('express-session');
 const logger = require('morgan');
 const chalk = require('chalk');
 const path = require('path');
@@ -38,41 +39,31 @@ mongoose.connection.on('error', (err) => {
 
 //Express configuration
 app.set('port', process.env.PORT || process.env.OPENSHIFT_NODEJS_PORT || 8080);
+app.use(express.static(path.join(__dirname, 'public'), { maxAge: 31557600000 }));
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
 app.use(logger('dev'));
 app.use(bodyParser.urlencoded({extended: true}));
-// app.use(flash());
+app.use(flash());
+app.use(session({
+  resave: true,
+  saveUninitialized: true,
+  secret: process.env.SESSION_SECRET
+}));
 app.use(passport.initialize());
 app.use(passport.session());
 app.use((req, res, next) => {
   res.locals.user = req.user;
   next();
 });
-// app.use((req, res, next) => {
-//   // After successful login, redirect back to the intended page
-//   if (!req.user &&
-//       req.path !== '/login' &&
-//       req.path !== '/signup' &&
-//       !req.path.match(/^\/auth/) &&
-//       !req.path.match(/\./)) {
-//     req.session.returnTo = req.path;
-//   } else if (req.user &&
-//       req.path === '/account') {
-//     req.session.returnTo = req.path;
-//   }
-//   next();
-// });
-app.use(express.static(path.join(__dirname, 'public'), { maxAge: 31557600000 }));
 
 
 
 //Primary app routes
 app.get('/', homeController.index);
-app.get('/login', userController.getLogin);
-app.get('/new-pin', pinController.getNewPin);
+app.get('/new-pin', passportConfig.isAuthenticated, pinController.getNewPin);
 app.get('/pin/:id', pinController.getOnePin);
-// app.post('/login', userController.postLogin);
+app.get('/pinsBy/user/:id', pinController.getPinsBy);
 // app.get('/signup', userController.getSignup);
 // app.get('/account', userController.passportConfig.isAuthenticated, userController.getAccount);
 // app.get('/user/:user', userController.browseUser);
@@ -82,13 +73,14 @@ app.get('/pin/:id', pinController.getOnePin);
 
 //API routes
 app.get('/api', apiController.getApi);
-app.post('/api/new-pin', pinController.postNewPin);
+app.post('/api/new-pin', passportConfig.isAuthenticated, pinController.postNewPin);
+app.delete('/pin/:id', passportConfig.isAuthenticated, pinController.deletePin);
 // app.post('/api/upload', passportConfig.isAuthenticated, passportConfig.isAuthorized, apiController.newPin);
 // app.delete('/api/delete-pin', passportConfig.isAuthenticated, passportConfig.isAuthorized, apiController.deletePin);
 
 //OAuth authentication routes
 app.get('/auth/twitter', passport.authenticate('twitter'));
-app.get('/auth/twitter/callback', passport.authenticate('twitter', { failureRedirect: '/login' }), (req, res) => {
+app.get('/auth/twitter/callback', passport.authenticate('twitter', { failureRedirect: '/auth/twitter' }), (req, res) => {
   res.redirect(req.session.returnTo || '/');
 });
 

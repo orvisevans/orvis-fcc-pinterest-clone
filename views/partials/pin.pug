@@ -1,0 +1,8 @@
+.card.text-white.bg-dark
+    a(href="/pin/"+pin.id)
+        image.card-img-top.img-fluid(src=pin.source, title=pin.title)
+    .card-body
+        h5.card-title= pin.title
+        p.card-text
+        small.text-muted= "Posted by "
+            a(href="/pinsBy/user/" + pin.owner)= pin.owner

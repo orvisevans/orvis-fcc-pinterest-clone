@@ -1,5 +1,4 @@
 const passport = require('passport');
-const request = require('request');
 const TwitterStrategy = require('passport-twitter').Strategy;
 const OAuthStrategy = require('passport-oauth').OAuthStrategy;
 const OAuth2Strategy = require('passport-oauth').OAuth2Strategy;
@@ -37,6 +36,7 @@ passport.use(new TwitterStrategy({
     callbackURL: '/auth/twitter/callback',
     passReqToCallback: true
   }, (req, accessToken, tokenSecret, profile, done) => {
+    console.log("Twitter profile:", profile);
     if (req.user) {
       User.findOne({ twitter: profile.id }, (err, existingUser) => {
         if (err) { return done(err); }
@@ -49,6 +49,7 @@ passport.use(new TwitterStrategy({
             user.twitter = profile.id;
             user.tokens.push({ kind: 'twitter', accessToken, tokenSecret });
             user.profile.name = user.profile.name || profile.displayName;
+            user.profile.screenName = profile.screen_name;
             user.profile.location = user.profile.location || profile._json.location;
             user.profile.picture = user.profile.picture || profile._json.profile_image_url_https;
             user.save((err) => {
@@ -69,6 +70,7 @@ passport.use(new TwitterStrategy({
         user.twitter = profile.id;
         user.tokens.push({ kind: 'twitter', accessToken, tokenSecret });
         user.profile.name = profile.displayName;
+        user.profile.screenName = profile.screenName;
         user.profile.location = profile._json.location;
         user.profile.picture = profile._json.profile_image_url_https;
         user.save((err) => {
@@ -85,7 +87,8 @@ exports.isAuthenticated = (req, res, next) => {
     if (req.isAuthenticated()) {
       return next();
     }
-    res.redirect('/login');
+    req.flash('info', { msg: 'You must be logged in to post a new pin.' });
+    res.redirect('/');
   };
   
   /**

@@ -17,13 +17,10 @@ exports.getNewPin = (req, res) => {
  */
 
  exports.postNewPin = (req, res) => {
-    //  let newPin = new Pin{
-    //      source: req.soure
-    //  }
     let newPin = new Pin({
         source: req.body.source,
         title: req.body.title,
-        owner: ""
+        owner: req.user.id
     });
     newPin.save((err, doc) => {
         if(err) { return console.error(err); }
@@ -45,14 +42,35 @@ exports.getNewPin = (req, res) => {
  };
 
  /**
+  * Get pins by one user
+  */
+
+  exports.getPinsBy = (req, res) => {
+      Pin.find({owner: req.params.id}, null, {limit: 20}, (err, pins) => {
+          if (err) { res.locals.pins=[]; return console.error(err); }
+          res.locals.header = "Pins by " + req.params.id;
+          renderPins(pins, res);
+      })
+  }
+
+ /**
   * Get fresh pins and render home view with them
   */
  exports.getFreshPins = (req, res) => {
-     Pin.find({}, {limit: 20}, (err, pins) => {
+     Pin.find({}, null, {limit: 50}, (err, pins) => {
          if (err) { res.locals.pins=[]; return console.error(err); }
-         res.locals.pins = pins
-         res.render('pinboard', {
-             title: 'Home'
-         });
+         renderPins(pins, res);
      });
  };
+
+
+ /**
+  *  Render a pin set
+  */
+
+  renderPins = (pins, res) => {
+    res.locals.pins = pins;
+    res.render('pinboard', {
+        title: 'Home'
+    });
+  }
