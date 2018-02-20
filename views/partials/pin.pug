@@ -1,12 +1,15 @@
-.card.text-white.bg-dark
+.card.text-white.bg-dark(id="pin-" + pin.id)
     a(href="/pin/"+pin.id)
         image.card-img-top.img-fluid(src=pin.source, title=pin.title)
-    .card-body(id="pin-" + pin.id)
+    .card-body
         h5.card-title= pin.title
         p.card-text
-        small.text-muted= "Posted by "
-            if user && user.id==pin.owner
+        small.text-muted Posted By 
+            if user && pin.owner && user.id==pin.owner.id
                 a(href="/pinsBy/user/" + pin.owner) You
                 button.delete-pin.float-right(data-id=pin.id) Delete
-            else
-                a(href="/pinsBy/user/" + pin.owner)= pin.owner
+            else 
+                if pin.owner && pin.owner.profile
+                    a(href="/pinsBy/user/" + pin.owner.id)= pin.owner.profile.name
+                else
+                    span the System

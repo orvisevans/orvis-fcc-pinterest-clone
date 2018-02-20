@@ -34,8 +34,9 @@ exports.getNewPin = (req, res) => {
   */
 
   exports.deletePin = (req, res) => {
-      Pin.findByIdAndRemove(req.params.id, (err, res) => {
+      Pin.findByIdAndRemove(req.params.id, (err, offer) => {
           if(err) { return console.error(err); }
+          res.send('deleted!');
       });
   }
 
@@ -45,10 +46,17 @@ exports.getNewPin = (req, res) => {
  exports.getOnePin = (req, res) => {
      Pin.findById(req.params.id, (err, pin) => {
          if (err) { res.locals.pins=[]; return console.error(err); }
-         res.locals.pin = pin
-         res.render('one-pin', {
-             title: pin.title
-         });
+        Pin.populate(pin, {path: 'owner'}, (err, pin) => {
+            if (err) { return console.error(err); }
+            if (pin) {
+                res.locals.pin = pin;
+                res.render('one-pin', {
+                    title: pin.title
+                });
+            } else {
+                res.redirect('/');
+            }
+        })
      });
  };
 
@@ -89,7 +97,10 @@ exports.getNewPin = (req, res) => {
 
   renderPins = (pins, res) => {
     res.locals.pins = pins;
-    res.render('pinboard', {
-        title: 'Home'
+    Pin.populate(pins, {path: 'owner'}, (err, pins) => {
+        if (err) {return console.error(err); }
+        res.render('pinboard', {
+            title: 'Pinboard'
+        });
     });
   }

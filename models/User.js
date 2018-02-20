@@ -8,7 +8,9 @@ const userSchema = new mongoose.Schema({
     name: String,
     screenName: String,
     picture: String
-  }
+  },
+
+  pins: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Pin'}]
 }, { timestamps: true });
 
 const User = mongoose.model('User', userSchema);
