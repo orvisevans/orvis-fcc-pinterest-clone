@@ -1,4 +1,4 @@
-$(".delete-pin").click(function() {
+$('.delete-pin').click(function() {
     var id = $(this).attr('data-id');
     $.ajax({
         url: '/api/delete/pin/' + id,

@@ -1,6 +1,6 @@
 .card.text-white.bg-dark(id="pin-" + pin.id)
     a(href="/pin/"+pin.id)
-        image.card-img-top.img-fluid(src=pin.source, title=pin.title)
+        image.card-img-top.img-fluid(src=pin.source, title=pin.title, onerror="this.onerror=null;this.src='/img/broken_link.png';")
     .card-body
         h5.card-title= pin.title
         p.card-text
