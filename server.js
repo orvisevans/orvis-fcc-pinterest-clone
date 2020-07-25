@@ -84,6 +84,7 @@ app.get('/auth/twitter', passport.authenticate('twitter'));
 app.get('/auth/twitter/callback', passport.authenticate('twitter', { failureRedirect: '/auth/twitter' }), (req, res) => {
   res.redirect(req.session.returnTo || '/');
 });
+app.get('/logout', userController.logout)
 
 //OAuth authorization routes
 
