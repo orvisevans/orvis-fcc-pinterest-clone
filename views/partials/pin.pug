@@ -1,4 +1,4 @@
-.card.text-white.bg-dark(id="pin-" + pin.id)
+.card.text-white.shadow.bg-dark(id="pin-" + pin.id)
     a(href="/pin/"+pin.id)
         image.card-img-top.img-fluid(src=pin.source, title=pin.title, onerror="this.onerror=null;this.src='/img/broken_link.png';")
     .card-body
